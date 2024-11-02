@@ -14,7 +14,9 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('.hbs', exphbs.engine({
     defaultLayout: 'main',
     layoutsDir: path.join(app.get('views'), 'layouts'),
-    extname: '.hbs'
+    partialsDir: path.join(app.get('views'), 'partials'),
+    extname: '.hbs',
+    helpers: require('./lib/handlebars')
 }));
 app.set('view engine', '.hbs');
 
@@ -25,7 +27,8 @@ app.use(express.urlencoded({ extended: false })); // Middleware para parsear el 
 // Rutas
 app.use(require('./routes'));
 app.use('/estudiantes', require('./routes/estudiantes'));
-app.use('/carreras', require('./routes/carreras')); // Nueva ruta para carreras
+app.use('/carreras', require('./routes/carreras'));
+app.use('/profesores', require('./routes/profesores')); // Nueva ruta para profesores
 
 // Archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
