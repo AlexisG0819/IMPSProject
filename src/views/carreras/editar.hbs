@@ -1,0 +1,20 @@
+<div class="container p-4">
+    <div class="row justify-content-center">
+        <h1>Editar carrera</h1>
+    </div>
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-4">
+            <form method="POST" action="/carreras/editar/{{carrera.idcarrera}}">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="idcarrera" value="{{carrera.idcarrera}}" placeholder="ID de la carrera" readonly />
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="carrera" value="{{carrera.carrera}}" placeholder="Nombre de la carrera" />
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-success btn-block">Actualizar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

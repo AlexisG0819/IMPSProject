@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 module.exports = {
     //Configurando objeto para inyectarlo al pool de conexiones
     database : {

@@ -1,6 +1,7 @@
 module.exports = {
+
     CONSTANTS: {
-        //**Algunos codigos de rror  con nla basse ded datos */
+        //**Algunos codigos de rror  con la basse ded datos */
         PROTOCOL_CONNECTION_LOST: 'PROTOCOL_CONNECTION_LOST',
         ER_CON_COUNT_ERROR: 'ER_CON_COUNT_ERROR',
         ECONNREFUSED: 'ECONNREFUSED',

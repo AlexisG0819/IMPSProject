@@ -1,22 +1,33 @@
 const mysql = require('mysql2');
 const { database } = require('./keys');
+const { promisify } = require('util');
 
 // Crear un pool de conexiones
 const pool = mysql.createPool(database);
 
-// Promisify pool query para usar async/await
-const conexion = pool.promise();
-
-// Ejemplo de una consulta
-async function ejemploConsulta() {
-    try {
-        const [rows, fields] = await conexion.query('SELECT * FROM estudiantes');
-        console.log(rows);
-    } catch (error) {
-        console.error('Error en la consulta:', error);
+// Verificar la conexión a la base de datos
+pool.getConnection((err, conexion) => {
+    if (err) {
+        if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+            console.error('La conexión con la base de datos fue cerrada.');
+        }
+        if (err.code === 'ER_CON_COUNT_ERROR') {
+            console.error('La base de datos tiene muchas conexiones.');
+        }
+        if (err.code === 'ECONNREFUSED') {
+            console.error('La conexión con la base de datos fue rechazada.');
+        }
+        return;
     }
-}
 
-ejemploConsulta();
+    if (conexion) {
+        console.log('Conexión establecida con la base de datos');
+        conexion.release();
+    }
+    return;
+});
 
-module.exports = conexion;
+// Configurando promisify para permitir en cada consulta un async/await (promesas)
+pool.query = promisify(pool.query);
+
+module.exports = pool;
