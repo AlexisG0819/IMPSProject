@@ -28,7 +28,8 @@ app.use(express.urlencoded({ extended: false })); // Middleware para parsear el 
 app.use(require('./routes'));
 app.use('/estudiantes', require('./routes/estudiantes'));
 app.use('/carreras', require('./routes/carreras'));
-app.use('/profesores', require('./routes/profesores')); // Nueva ruta para profesores
+app.use('/profesores', require('./routes/profesores'));
+app.use('/materias', require('./routes/materias')); // Nueva ruta para materias
 
 // Archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
