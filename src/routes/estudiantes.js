@@ -17,15 +17,24 @@ router.get('/agregar', (request, response) => {
 router.post('/agregar', async (request, response) => {
     const { idestudiante, nombre, apellido, email, idcarrera, usuario } = request.body;
     const nuevoEstudiante = { idestudiante, nombre, apellido, email, idcarrera, usuario };
-    await queries.insertarEstudiante(nuevoEstudiante);
+    try {
+        const resultado = await queries.insertarEstudiante(nuevoEstudiante);
+        if (resultado) {
+            request.flash('success', 'Registro insertado con éxito');
+        } else {
+            request.flash('error', 'Ocurrió un problema al guardar el registro');
+        }
+    } catch (error) {
+        console.error('Error al insertar el estudiante:', error);
+        request.flash('error', 'Ocurrió un problema al guardar el registro');
+    }
     response.redirect('/estudiantes');
 });
 
 // Endpoint que permite mostrar el formulario para editar un estudiante
 router.get('/editar/:idestudiante', async (request, response) => {
     const { idestudiante } = request.params;
-    const estudiantes = await queries.obtenerTodosLosEstudiantes();
-    const estudiante = estudiantes.find(est => est.idestudiante === idestudiante);
+    const estudiante = await queries.obtenerEstudiantePorId(idestudiante);
     response.render('estudiantes/editar', { estudiante });
 });
 
@@ -34,8 +43,19 @@ router.post('/editar/:idestudiante', async (request, response) => {
     const { idestudiante } = request.params;
     const { nombre, apellido, email, idcarrera, usuario } = request.body;
     const estudianteActualizado = { nombre, apellido, email, idcarrera, usuario };
-    await queries.actualizarEstudiante(idestudiante, estudianteActualizado);
-    response.redirect('/estudiantes');
+    try {
+        const resultado = await queries.actualizarEstudiante(idestudiante, estudianteActualizado);
+        if (resultado) {
+            request.flash('success', 'Registro actualizado con éxito');
+        } else {
+            request.flash('error', 'Ocurrió un problema al actualizar el registro');
+        }
+        response.redirect('/estudiantes');
+    } catch (error) {
+        console.error('Error al actualizar el estudiante:', error);
+        request.flash('error', 'Ocurrió un problema al actualizar el registro');
+        response.redirect('/estudiantes');
+    }
 });
 
 // Endpoint para eliminar un estudiante
@@ -43,7 +63,9 @@ router.get('/eliminar/:idestudiante', async (request, response) => {
     const { idestudiante } = request.params;
     const resultado = await queries.eliminarEstudiante(idestudiante);
     if (resultado > 0) {
-        console.log('Eliminado con éxito');
+        request.flash('success', 'Eliminación correcta');
+    } else {
+        request.flash('error', 'Error al eliminar');
     }
     response.redirect('/estudiantes');
 });

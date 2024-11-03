@@ -17,7 +17,17 @@ router.get('/agregar', (request, response) => {
 router.post('/agregar', async (request, response) => {
     const { idmateria, materia } = request.body;
     const nuevaMateria = { idmateria, materia };
-    await queries.insertarMateria(nuevaMateria);
+    try {
+        const resultado = await queries.insertarMateria(nuevaMateria);
+        if (resultado) {
+            request.flash('success', 'Registro insertado con éxito');
+        } else {
+            request.flash('error', 'Ocurrió un problema al guardar el registro');
+        }
+    } catch (error) {
+        console.error('Error al insertar la materia:', error);
+        request.flash('error', 'Ocurrió un problema al guardar el registro');
+    }
     response.redirect('/materias');
 });
 
@@ -33,8 +43,19 @@ router.post('/editar/:idmateria', async (request, response) => {
     const { idmateria } = request.params;
     const { materia } = request.body;
     const materiaActualizada = { materia };
-    await queries.actualizarMateria(idmateria, materiaActualizada);
-    response.redirect('/materias');
+    try {
+        const resultado = await queries.actualizarMateria(idmateria, materiaActualizada);
+        if (resultado) {
+            request.flash('success', 'Registro actualizado con éxito');
+        } else {
+            request.flash('error', 'Ocurrió un problema al actualizar el registro');
+        }
+        response.redirect('/materias');
+    } catch (error) {
+        console.error('Error al actualizar la materia:', error);
+        request.flash('error', 'Ocurrió un problema al actualizar el registro');
+        response.redirect('/materias');
+    }
 });
 
 // Endpoint para eliminar una materia
@@ -42,7 +63,9 @@ router.get('/eliminar/:idmateria', async (request, response) => {
     const { idmateria } = request.params;
     const resultado = await queries.eliminarMateria(idmateria);
     if (resultado > 0) {
-        console.log('Eliminado con éxito');
+        request.flash('success', 'Eliminación correcta');
+    } else {
+        request.flash('error', 'Error al eliminar');
     }
     response.redirect('/materias');
 });
