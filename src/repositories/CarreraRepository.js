@@ -11,6 +11,16 @@ module.exports = {
         }
     },
 
+    obtenerCarreraPorId: async (idcarrera) => {
+        try {
+            const [result] = await pool.query('SELECT * FROM carreras WHERE idcarrera = ?', [idcarrera]);
+            return result;
+        } catch (error) {
+            console.error('Ocurrió un problema al consultar la carrera: ', error);
+            throw error;
+        }
+    },
+
     eliminarCarrera: async (idcarrera) => {
         try {
             const result = await pool.query('DELETE FROM carreras WHERE idcarrera = ?', [idcarrera]);
@@ -24,7 +34,7 @@ module.exports = {
     insertarCarrera: async (carrera) => {
         try {
             const result = await pool.query('INSERT INTO carreras SET ?', [carrera]);
-            return result.insertId;
+            return result.affectedRows > 0; // Asegúrate de devolver un valor booleano
         } catch (error) {
             console.error('Error al insertar la carrera', error);
             throw error;

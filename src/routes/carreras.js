@@ -17,16 +17,24 @@ router.get('/agregar', (request, response) => {
 router.post('/agregar', async (request, response) => {
     const { idcarrera, carrera } = request.body;
     const nuevaCarrera = { idcarrera, carrera };
-    await queries.insertarCarrera(nuevaCarrera);
+    try {
+        const resultado = await queries.insertarCarrera(nuevaCarrera);
+        if (resultado) {
+            request.flash('success', 'Registro insertado con éxito');
+        } else {
+            request.flash('error', 'Ocurrió un problema al guardar el registro');
+        }
+    } catch (error) {
+        console.error('Error al insertar la carrera:', error);
+        request.flash('error', 'Ocurrió un problema al guardar el registro');
+    }
     response.redirect('/carreras');
 });
 
 // Endpoint que permite mostrar el formulario para editar una carrera
 router.get('/editar/:idcarrera', async (request, response) => {
     const { idcarrera } = request.params;
-    const carreras = await queries.obtenerTodasLasCarreras();
-    const carrera = carreras.find(car => car.idcarrera === idcarrera);
-    console.log('Carrera a editar:', carrera); // Verificar los datos obtenidos
+    const carrera = await queries.obtenerCarreraPorId(idcarrera);
     response.render('carreras/editar', { carrera });
 });
 
@@ -36,11 +44,17 @@ router.post('/editar/:idcarrera', async (request, response) => {
     const { carrera } = request.body;
     const carreraActualizada = { carrera };
     try {
-        await queries.actualizarCarrera(idcarrera, carreraActualizada);
+        const resultado = await queries.actualizarCarrera(idcarrera, carreraActualizada);
+        if (resultado) {
+            request.flash('success', 'Registro actualizado con éxito');
+        } else {
+            request.flash('error', 'Ocurrió un problema al actualizar el registro');
+        }
         response.redirect('/carreras');
     } catch (error) {
         console.error('Error al actualizar la carrera:', error);
-        response.status(500).send('Error al actualizar la carrera');
+        request.flash('error', 'Ocurrió un problema al actualizar el registro');
+        response.redirect('/carreras');
     }
 });
 
@@ -49,7 +63,9 @@ router.get('/eliminar/:idcarrera', async (request, response) => {
     const { idcarrera } = request.params;
     const resultado = await queries.eliminarCarrera(idcarrera);
     if (resultado > 0) {
-        console.log('Eliminado con éxito');
+        request.flash('success', 'Eliminación correcta');
+    } else {
+        request.flash('error', 'Error al eliminar');
     }
     response.redirect('/carreras');
 });
