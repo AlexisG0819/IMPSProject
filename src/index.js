@@ -24,7 +24,7 @@ app.set('view engine', '.hbs');
 
 // Middlewares
 app.use(session({
-    secret: 'mysecret', // Asegúrate de proporcionar un valor para la opción `secret`
+    secret: 'secret', // Asegúrate de proporcionar un valor para la opción `secret`
     resave: false,
     saveUninitialized: false
 }));
