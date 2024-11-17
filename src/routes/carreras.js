@@ -1,20 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const queries = require('../repositories/CarreraRepository');
+const { isLoggedIn } = require('../lib/auth');
 
 // Endpoint para mostrar todas las carreras
-router.get('/', async (request, response) => {
+router.get('/', isLoggedIn, async (request, response) => {
     const carreras = await queries.obtenerTodasLasCarreras();
     response.render('carreras/listado', { carreras }); // Mostramos el listado de carreras
 });
 
 // Endpoint que permite mostrar el formulario para agregar una nueva carrera
-router.get('/agregar', (request, response) => {
+router.get('/agregar', isLoggedIn, (request, response) => {
     response.render('carreras/agregar');
 });
 
 // Endpoint para agregar una carrera
-router.post('/agregar', async (request, response) => {
+router.post('/agregar', isLoggedIn, async (request, response) => {
     const { idcarrera, carrera } = request.body;
     const nuevaCarrera = { idcarrera, carrera };
     try {
@@ -32,14 +33,14 @@ router.post('/agregar', async (request, response) => {
 });
 
 // Endpoint que permite mostrar el formulario para editar una carrera
-router.get('/editar/:idcarrera', async (request, response) => {
+router.get('/editar/:idcarrera', isLoggedIn, async (request, response) => {
     const { idcarrera } = request.params;
     const carrera = await queries.obtenerCarreraPorId(idcarrera);
     response.render('carreras/editar', { carrera });
 });
 
 // Endpoint para actualizar una carrera
-router.post('/editar/:idcarrera', async (request, response) => {
+router.post('/editar/:idcarrera', isLoggedIn, async (request, response) => {
     const { idcarrera } = request.params;
     const { carrera } = request.body;
     const carreraActualizada = { carrera };
@@ -59,7 +60,7 @@ router.post('/editar/:idcarrera', async (request, response) => {
 });
 
 // Endpoint para eliminar una carrera
-router.get('/eliminar/:idcarrera', async (request, response) => {
+router.get('/eliminar/:idcarrera', isLoggedIn, async (request, response) => {
     const { idcarrera } = request.params;
     const resultado = await queries.eliminarCarrera(idcarrera);
     if (resultado > 0) {
