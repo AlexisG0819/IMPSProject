@@ -1,32 +1,38 @@
 <div class="container p-4">
-    <div class="row justify-content-center">
-        <h1>Agregar estudiante</h1>
-    </div>
-    <div class="row justify-content-center mt-4">
-        <div class="col-md-4">
-            <form method="POST" action="/estudiantes/agregar">
-                <div class="form-group">
-                    <input type="text" class="form-control" name="idestudiante" placeholder="ID del estudiante" autofocus />
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Agregar Estudiante</h3>
                 </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" name="nombre" placeholder="Nombre del estudiante" />
+                <div class="card-body">
+                    <form action="/estudiantes/agregar" method="POST">
+                        <div class="form-group">
+                            <input type="text" name="idestudiante" class="form-control" placeholder="ID Estudiante" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="nombre" class="form-control" placeholder="Nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="apellido" class="form-control" placeholder="Apellido" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" name="email" class="form-control" placeholder="Email" required>
+                        </div>
+                        <div class="form-group">
+                            <select name="idcarrera" class="form-control" required>
+                                {{#each lstCarreras}}
+                                    <option value="{{this.idcarrera}}">{{this.carrera}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="usuario" class="form-control" placeholder="Usuario" required>
+                        </div>
+                        <button type="submit" class="btn btn-success btn-block">Agregar Estudiante</button>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" name="apellido" placeholder="Apellido del estudiante" />
-                </div>
-                <div class="form-group">
-                    <input type="email" class="form-control" name="email" placeholder="Correo del estudiante" />
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" name="idcarrera" placeholder="ID Carrera" />
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" name="usuario" placeholder="Usuario del estudiante" />
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-success btn-block">Guardar</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>

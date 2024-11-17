@@ -7,7 +7,7 @@ const flash = require('connect-flash'); // Nos permite manejar mensajes en la se
 const session = require('express-session'); // Permite manejar sesiones, por ejemplo, para almacenar datos en la
 // memoria del servidor, tambien se puede almacenar en la base de datos.
 const MySQLStore = require('express-mysql-session')(session);
-const passport = require('passport'); // necesario para autenticacion del usuario
+const passport = require('passport'); // necesario para autenticacion del usuario 
 
 // Inicializaciones
 const app = express();
